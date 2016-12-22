@@ -9,7 +9,7 @@ app.listen((process.env.PORT || 3000));
 
 // Server frontpage
 app.get('/', function (req, res) {
-    res.send('This is TestBot Server! :D \n If you want to check it, access: http://facebook.com/mauriciocarnieletto');
+    res.send('This is TestBot Server! :D <br> If you want to check it, access: http://facebook.com/mauriciocarnieletto');
 });
 
 // Facebook Webhook
