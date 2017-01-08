@@ -19,9 +19,8 @@ app.post('/webhook', function (req, res) {
     for (i = 0; i < events.length; i++) {
         var event = events[i];
 		if (event.message && event.message.text) {
-		    if (!fancyMessage(event.sender.id, event.message.text)) {
-		        sendMessage(event.sender.id, {text: "Echo: " + event.message.text});
-		    }
+		    fancyMessage(event.sender.id, event.message.text);
+		        // sendMessage(event.sender.id, {text: "Echo: " + event.message.text});
 		} else if (event.postback) {
 		    console.log("Postback received: " + JSON.stringify(event.postback));
 		}
@@ -51,7 +50,6 @@ function sendMessage(recipientId, message) {
 
 // send rich message with kitten
 function fancyMessage(recipientId, text) {
-
     message = {
         "attachment": {
             "type": "template",
@@ -64,8 +62,9 @@ function fancyMessage(recipientId, text) {
                     "buttons": [{
                         "type": "postback",
                         "title": "Candidato",
-                        "payload": "User:" + recipientId + "is:Candidate",
-                    }, {
+                        "payload": "User:" + recipientId + "is:Candidate"
+                    }]
+                }, {
                     "title": "Aluno Ensino Superior",
                     "subtitle": "Aluno do Ensino Superior",
                     "image_url": "https://image.shutterstock.com/display_pic_with_logo/162265/275161592/stock-photo-female-hands-with-pen-writing-on-notebook-275161592.jpg",
@@ -73,7 +72,8 @@ function fancyMessage(recipientId, text) {
                         "type": "postback",
                         "title": "Aluno Ensino Superior",
                         "payload": "User:" + recipientId + "is:Student",
-                    }, {
+                    }]
+                }, {
                     "title": "Aluno Colégio",
                     "subtitle": "Aluno do Colégio",
                     "image_url": "https://image.shutterstock.com/display_pic_with_logo/1151480/301162325/stock-photo-back-to-school-background-with-rocket-made-from-pencils-301162325.jpg",
