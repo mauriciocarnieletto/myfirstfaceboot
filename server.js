@@ -19,8 +19,11 @@ app.post('/webhook', function (req, res) {
     for (i = 0; i < events.length; i++) {
         var event = events[i];
 		if (event.message && event.message.text) {
-		    fancyMessage(event.sender.id, event.message.text);
-		        // sendMessage(event.sender.id, {text: "Echo: " + event.message.text});
+			if(["Cândidato", "Aluno Ensino Superior", "Aluno do Colégio"].contains(event.message.text)) {
+				sendMessage(recipientId, "Bem vindo " + event.message.text);
+			} else {
+		    	firstMessage(event.sender.id, event.message.text);
+			}
 		} else if (event.postback) {
 		    console.log("Postback received: " + JSON.stringify(event.postback));
 		}
@@ -49,7 +52,8 @@ function sendMessage(recipientId, message) {
 };
 
 // send rich message with kitten
-function fancyMessage(recipientId, text) {
+function firstMessage(recipientId, text) {
+
     message = {
         "attachment": {
             "type": "template",
