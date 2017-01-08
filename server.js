@@ -14,15 +14,6 @@ app.get('/', function (req, res) {
     res.send('This is TestBot Server! :D <br> If you want to check it, access: http://facebook.com/mauriciocarnieletto');
 });
 
-// Facebook Webhook
-// app.get('/webhook', function (req, res) {
-//     if (req.query['hub.verify_token'] === 'EAADQ9m8UU5YBAMHitJLqnWCXepsxKgpyfMDOWUHclkkOFYUnZCFxbb6cXTyAAqWwRna0SrkqVhGHRrPo5xJ2O9zXZAQe7Qzt0gZCKVpooFAJgBOSZCEs4nmNbCuZCafpnWOs4yduLg9hRlR6utnGKbN2TuTmctglDZAkyC4SqnUAZDZD') {
-//         res.send(req.query['hub.challenge']);
-//     } else {
-//         res.send('Invalid verify token');
-//     }
-// });
-
 // handler receiving messages
 app.post('/webhook', function (req, res) {
     var events = req.body.entry[0].messaging;
@@ -70,7 +61,9 @@ function kittenMessage(recipientId, text) {
             
             var imageUrl = "https://placekitten.com/" + Number(values[1]) + "/" + Number(values[2]);
             
-            message = {
+            var messages = [];
+
+            messageOne = {
                 "attachment": {
                     "type": "template",
                     "payload": {
@@ -93,8 +86,35 @@ function kittenMessage(recipientId, text) {
                 }
             };
     
+
+    		messageTwo = {
+                "attachment": {
+                    "type": "template",
+                    "payload": {
+                        "template_type": "generic",
+                        "elements": [{
+                            "title": "Kitten",
+                            "subtitle": "Cute2 kitten2 picture2",
+                            "image_url": imageUrl ,
+                            "buttons": [{
+                                "type": "web_url",
+                                "url": imageUrl,
+                                "title": "Show kitten"
+                                }, {
+                                "type": "postback",
+                                "title": "I like this",
+                                "payload": "User " + recipientId + " likes kitten " + imageUrl,
+                            }]
+                        }]
+                    }
+                }
+            };
+
+            messages.push(messageOne);
+            messages.push(messageTwo);
+
             sendMessage(recipientId, message);
-            
+
             return true;
         }
     }
