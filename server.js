@@ -5,13 +5,12 @@ var request 	= require('request');
 
 // Express
 var app 		= express();
-
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Server frontpage
 app.get('/', function (req, res) {
-    res.send('This is TestBot Server! :D <br> If you want to check it, access: http://facebook.com/mauriciocarnieletto');
+    res.send('This is TestBot Server! <br> If you want to check it, access: http://facebook.com/mauriciocarnieletto');
 });
 
 // handler receiving messages
@@ -20,7 +19,7 @@ app.post('/webhook', function (req, res) {
     for (i = 0; i < events.length; i++) {
         var event = events[i];
 		if (event.message && event.message.text) {
-		    if (!kittenMessage(event.sender.id, event.message.text)) {
+		    if (!fancyMessage(event.sender.id, event.message.text)) {
 		        sendMessage(event.sender.id, {text: "Echo: " + event.message.text});
 		    }
 		} else if (event.postback) {
@@ -51,76 +50,44 @@ function sendMessage(recipientId, message) {
 };
 
 // send rich message with kitten
-function kittenMessage(recipientId, text) {
-    
-    text = text || "";
-    var values = text.split(' ');
-    
-    if (values.length === 3 && values[0] === 'kitten') {
-        if (Number(values[1]) > 0 && Number(values[2]) > 0) {
-            
-            var imageUrl = "https://placekitten.com/" + Number(values[1]) + "/" + Number(values[2]);
-            
-            var messages = [];
+function fancyMessage(recipientId, text) {
 
-            messageOne = {
-                "attachment": {
-                    "type": "template",
-                    "payload": {
-                        "template_type": "generic",
-                        "elements": [{
-                            "title": "Kitten",
-                            "subtitle": "Cute kitten picture",
-                            "image_url": imageUrl ,
-                            "buttons": [{
-                                "type": "web_url",
-                                "url": imageUrl,
-                                "title": "Show kitten"
-                                }, {
-                                "type": "postback",
-                                "title": "I like this",
-                                "payload": "User " + recipientId + " likes kitten " + imageUrl,
-                            }]
-                        }]
-                    }
-                }
-            };
-    
-
-    		messageTwo = {
-                "attachment": {
-                    "type": "template",
-                    "payload": {
-                        "template_type": "generic",
-                        "elements": [{
-                            "title": "Kitten",
-                            "subtitle": "Cute2 kitten2 picture2",
-                            "image_url": imageUrl ,
-                            "buttons": [{
-                                "type": "web_url",
-                                "url": imageUrl,
-                                "title": "Show kitten"
-                                }, {
-                                "type": "postback",
-                                "title": "I like this",
-                                "payload": "User " + recipientId + " likes kitten " + imageUrl,
-                            }]
-                        }]
-                    }
-                }
-            };
-
-            messages.push(messageOne);
-            messages.push(messageTwo);
-
-            sendMessage(recipientId, message);
-
-            return true;
+    message = {
+        "attachment": {
+            "type": "template",
+            "payload": {
+                "template_type": "generic",
+                "elements": [{
+                    "title": "Cândidato",
+                    "subtitle": "Candidato do Vestibular",
+                    "image_url": "https://image.shutterstock.com/display_pic_with_logo/2552089/236656255/stock-photo-optical-form-of-an-examination-236656255.jpg",
+                    "buttons": [{
+                        "type": "postback",
+                        "title": "Candidato",
+                        "payload": "User:" + recipientId + "is:Candidate",
+                    }, {
+                    "title": "Aluno Ensino Superior",
+                    "subtitle": "Aluno do Ensino Superior",
+                    "image_url": "https://image.shutterstock.com/display_pic_with_logo/162265/275161592/stock-photo-female-hands-with-pen-writing-on-notebook-275161592.jpg",
+                    "buttons": [{
+                        "type": "postback",
+                        "title": "Aluno Ensino Superior",
+                        "payload": "User:" + recipientId + "is:Student",
+                    }, {
+                    "title": "Aluno Colégio",
+                    "subtitle": "Aluno do Colégio",
+                    "image_url": "https://image.shutterstock.com/display_pic_with_logo/1151480/301162325/stock-photo-back-to-school-background-with-rocket-made-from-pencils-301162325.jpg",
+                    "buttons": [{
+                        "type": "postback",
+                        "title": "Aluno do Colégio",
+                        "payload": "User:" + recipientId + "is:Student",
+                    }]
+                }]
+            }
         }
-    }
-    
-    return false;
-    
+    };
+
+    sendMessage(recipientId, message);
 };
 
 
