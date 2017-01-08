@@ -1,11 +1,13 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var request = require('request');
-var app = express();
+// Dependencies
+var express 	= require('express');
+var bodyParser 	= require('body-parser');
+var request 	= require('request');
+
+// Express
+var app 		= express();
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
-app.listen((process.env.PORT || 3000));
 
 // Server frontpage
 app.get('/', function (req, res) {
@@ -20,3 +22,6 @@ app.get('/webhook', function (req, res) {
         res.send('Invalid verify token');
     }
 });
+
+// Service start
+app.listen((process.env.PORT || 3000));
