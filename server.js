@@ -4,13 +4,22 @@ var bodyParser 	= require('body-parser');
 var request 	= require('request');
 
 // Express
-var app 		= express();
+var app = express();
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Server frontpage
 app.get('/', function (req, res) {
-    res.send('This is TestBot Server! <br> If you want to check it, access: http://facebook.com/mauriciocarnieletto');
+    res.send('<h1>This is TestBot Server!</h1> If you want to check it, access: <a href="https://www.facebook.com/testmyfirstfaceboot/">https://www.facebook.com/testmyfirstfaceboot/</a>');
+});
+
+// handler the facebook authentication
+app.get('/webhook', function (req, res) {
+    if (req.query['hub.verify_token'] === 'EAADQ9m8UU5YBAMHitJLqnWCXepsxKgpyfMDOWUHclkkOFYUnZCFxbb6cXTyAAqWwRna0SrkqVhGHRrPo5xJ2O9zXZAQe7Qzt0gZCKVpooFAJgBOSZCEs4nmNbCuZCafpnWOs4yduLg9hRlR6utnGKbN2TuTmctglDZAkyC4SqnUAZDZD') {
+      res.send(req.query['hub.challenge']);
+    } else {
+      res.send('Error, wrong validation token');    
+    }
 });
 
 // handler receiving messages
@@ -51,7 +60,7 @@ function sendMessage(recipientId, message) {
     });
 };
 
-// send rich message with kitten
+// Send the first Message
 function firstMessage(recipientId, text) {
 
     message = {
@@ -94,6 +103,22 @@ function firstMessage(recipientId, text) {
     sendMessage(recipientId, message);
 };
 
+function receivedPostback(event) {
+  var senderID = event.sender.id;
+  var recipientID = event.recipient.id;
+  var timeOfPostback = event.timestamp;
+
+  // The 'payload' param is a developer-defined field which is set in a postback 
+  // button for Structured Messages. 
+  var payload = event.postback.payload;
+
+  console.log("Received postback for user %d and page %d with payload '%s' " + 
+    "at %d", senderID, recipientID, payload, timeOfPostback);
+
+  // When a postback is called, we'll send a message back to the sender to 
+  // let them know it was successful
+  sendTextMessage(senderID, "Postback called");
+}
 
 // Service start
 app.listen((process.env.PORT || 3000));
