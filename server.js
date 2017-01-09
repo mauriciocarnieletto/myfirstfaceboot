@@ -27,10 +27,13 @@ app.post('/webhook', function (req, res) {
     var events = req.body.entry[0].messaging;
     for (i = 0; i < events.length; i++) {
         var event = events[i];
-        sendMessage(event.sender.id, JSON.stringify(event));
+
+        console.log(JSON.stringify(event));
+
 		if (event.message && event.message.text) {
 	    	firstMessage(event.sender.id, event.message.text);
 		} else if (event.postback) {
+            console.log('entrou');
 		    sendMessage(event.sender.id, "Postback received: " + JSON.stringify(event.postback));
 		}
     }
@@ -72,7 +75,7 @@ function firstMessage(recipientId, text) {
                     "buttons": [{
                         "type": "postback",
                         "title": "Candidato",
-                        "payload": "User:" + recipientId + "is:Candidate"
+                        "payload": "DEVELOPER_DEFINED_PAYLOADe"
                     }]
                 }, {
                     "title": "Aluno Ensino Superior",
@@ -81,7 +84,7 @@ function firstMessage(recipientId, text) {
                     "buttons": [{
                         "type": "postback",
                         "title": "Aluno Ensino Superior",
-                        "payload": "User:" + recipientId + "is:Student",
+                        "payload": "DEVELOPER_DEFINED_PAYLOAD",
                     }]
                 }, {
                     "title": "Aluno Colégio",
@@ -90,7 +93,7 @@ function firstMessage(recipientId, text) {
                     "buttons": [{
                         "type": "postback",
                         "title": "Aluno do Colégio",
-                        "payload": "User:" + recipientId + "is:Student",
+                        "payload": "DEVELOPER_DEFINED_PAYLOAD",
                     }]
                 }]
             }
