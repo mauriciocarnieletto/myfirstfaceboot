@@ -27,6 +27,7 @@ app.post('/webhook', function (req, res) {
     var events = req.body.entry[0].messaging;
     for (i = 0; i < events.length; i++) {
         var event = events[i];
+        sendMessage(event.sender.id, JSON.stringify(event));
 		if (event.message && event.message.text) {
 	    	firstMessage(event.sender.id, event.message.text);
 		} else if (event.postback) {
