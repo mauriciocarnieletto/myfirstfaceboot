@@ -28,13 +28,9 @@ app.post('/webhook', function (req, res) {
     for (i = 0; i < events.length; i++) {
         var event = events[i];
 		if (event.message && event.message.text) {
-			// if(["Cândidato", "Aluno Ensino Superior", "Aluno do Colégio"].contains(event.message.text)) {
-				// sendMessage(recipientId, "Bem vindo " + event.message.text);
-			// } else {
-		    	firstMessage(event.sender.id, event.message.text);
-			// }
+	    	firstMessage(event.sender.id, event.message.text);
 		} else if (event.postback) {
-		    console.log("Postback received: " + JSON.stringify(event.postback));
+		    sendMessage(event.sender.id, "Postback received: " + JSON.stringify(event.postback));
 		}
     }
     res.sendStatus(200);
