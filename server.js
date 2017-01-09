@@ -34,7 +34,7 @@ app.post('/webhook', function (req, res) {
 	    	firstMessage(event.sender.id, event.message.text);
 		} else if (event.postback) {
             console.log('entrou');
-		    sendMessage(event.sender.id, "Postback received: ");
+		    sendMessage(event.sender.id, 'Postback received');
 		}
     }
     res.sendStatus(200);
