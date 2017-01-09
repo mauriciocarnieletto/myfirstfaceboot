@@ -34,7 +34,7 @@ app.post('/webhook', function (req, res) {
 	    	firstMessage(event.sender.id, event.message.text);
 		} else if (event.postback) {
             console.log('entrou');
-		    sendMessage(event.sender.id, "Postback received: " + JSON.stringify(event.postback));
+		    sendMessage(event.sender.id, "Postback received: ");
 		}
     }
     res.sendStatus(200);
@@ -75,7 +75,7 @@ function firstMessage(recipientId, text) {
                     "buttons": [{
                         "type": "postback",
                         "title": "Candidato",
-                        "payload": "DEVELOPER_DEFINED_PAYLOADe"
+                        "payload": "Candidato"
                     }]
                 }, {
                     "title": "Aluno Ensino Superior",
@@ -84,7 +84,7 @@ function firstMessage(recipientId, text) {
                     "buttons": [{
                         "type": "postback",
                         "title": "Aluno Ensino Superior",
-                        "payload": "DEVELOPER_DEFINED_PAYLOAD",
+                        "payload": "Superior",
                     }]
                 }, {
                     "title": "Aluno Colégio",
@@ -93,7 +93,7 @@ function firstMessage(recipientId, text) {
                     "buttons": [{
                         "type": "postback",
                         "title": "Aluno do Colégio",
-                        "payload": "DEVELOPER_DEFINED_PAYLOAD",
+                        "payload": "Colegio",
                     }]
                 }]
             }
