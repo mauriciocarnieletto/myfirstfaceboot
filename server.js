@@ -51,6 +51,8 @@ app.post('/webhook', function (req, res) {
         
         storeMessage(event);
 
+        console.log(event);
+
         if (event.message && event.message.text) {
 
             bot = require('./bot/welcome.js')(event);
