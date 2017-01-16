@@ -59,8 +59,6 @@ app.post('/webhook', function (req, res) {
 
         } else if (event.postback) {
 
-            console.log(event);
-
             var arr = event.postback.payload.split('->');
 
             bot = require('./bot/'+arr[0]+'.js')(event);
@@ -80,7 +78,7 @@ app.post('/webhook', function (req, res) {
  */
 function storeMessage(event) {
 
-    return myCache.set(event.sender.id, event.message);
+    return myCache.set(event.sender.id, event);
 };
 
 /*
@@ -103,7 +101,7 @@ function sendMessage(recipientId, message) {
         qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
         method: 'POST',
         json: {
-            recipient: {id: recipientId},
+            recipient: { id: recipientId },
             message: message,
         }
     }, function(error, response, body) {
