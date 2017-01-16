@@ -42,7 +42,7 @@ function Candidate(event) {
         auth: function(event) {
 
             return {
-                message: "Digite seu CPF";
+                message: "Digite seu CPF"
             };
 
         },
