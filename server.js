@@ -59,6 +59,8 @@ app.post('/webhook', function (req, res) {
 
         } else if (event.postback) {
 
+            console.log(event);
+
             var arr = event.postback.split('->');
 
             bot = require('./bot/'+arr[0]+'.js')(event);
