@@ -55,7 +55,7 @@ app.post('/webhook', function (req, res) {
 
             bot = require('./bot/welcome.js')(event);
             
-            sendMessage(event.sender.id, botMessage['welcomeMenu'](event));
+            sendMessage(event.sender.id, bot['welcomeMenu'](event));
 
         } else if (event.postback) {
 
@@ -63,7 +63,7 @@ app.post('/webhook', function (req, res) {
 
             bot = require('./bot/'+arr[0]+'.js')(event);
             
-            sendMessage(event.sender.id, botMessage[arra[1]](event));
+            sendMessage(event.sender.id, bot[arra[1]](event));
         }
         
 
