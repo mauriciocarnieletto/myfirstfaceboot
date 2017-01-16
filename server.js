@@ -65,7 +65,7 @@ app.post('/webhook', function (req, res) {
 
             bot = require('./bot/'+arr[0]+'.js')(event);
             
-            sendMessage(event.sender.id, bot[arra[1]](event));
+            sendMessage(event.sender.id, bot[arr[1]](event));
         }
         
 
