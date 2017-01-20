@@ -30,7 +30,7 @@ function Candidate(event) {
     return {
 
         welcomeMenu: function(event, callback) {
-
+            console.log('welcome');
             return {
                 "attachment": {
                     "type": "template",

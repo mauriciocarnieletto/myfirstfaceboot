@@ -80,6 +80,9 @@ function Facebook() {
                 var message = {},
                     event = events[i];
 
+                console.log('---------------------- event -------------------');
+
+                console.log(event);
                 event.previousEvent = getPreviousEvent(event);
 
                 if (!event.previousEvent.nextPostBack && event.message && event.message.text) {
@@ -87,7 +90,7 @@ function Facebook() {
                     message = { 'text': 'Desculpe, não entendi.' };
 
                 } else if(event.previousEvent.nextPostBack && event.message && event.message.text) {
-    
+                    console.log('next post');
                     var arr = event.previousEvent.nextPostBack.payload.split('->');
 
                     var speach = require('../bot/speach/'+arr[0]+'.js')(event);
@@ -95,7 +98,7 @@ function Facebook() {
                     message = speach[arr[1]];
 
                 } else if (event.postback) {
-
+                    console.log('postback');
                     var arr = event.postback.payload.split('->');
 
                     var speach = require('../bot/speach/'+arr[0]+'.js')(event);
