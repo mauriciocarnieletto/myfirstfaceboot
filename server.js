@@ -14,19 +14,19 @@ var facebook = require('./bot/facebook.js')();
 // Server frontpage
 app.get('/', function (req, res) {
 
-    var events = [{
-            message: {
-                text: (typeof req.query['message'] !== "undefined") ? req.query['message'] : undefined,
-            },
-            postback: {
-                payload: (typeof req.query['payload'] !== "undefined") ? req.query['payload'] : undefined,
-            },
-            sender: {
-                id: req.query['id'],
-            }
-        }];
+    // var events = [{
+    //         message: {
+    //             text: (typeof req.query['message'] !== "undefined") ? req.query['message'] : undefined,
+    //         },
+    //         postback: {
+    //             payload: (typeof req.query['payload'] !== "undefined") ? req.query['payload'] : undefined,
+    //         },
+    //         sender: {
+    //             id: req.query['id'],
+    //         }
+    //     }];
 
-    facebook.chat(events, req, res, function () { });
+    // facebook.chat(events, req, res, function () { });
 
     res.send('<h1>This is TestBot Server!</h1> If you want to check it, access: <a href="https://www.facebook.com/testmyfirstfaceboot/"><b>@testmyfirstfaceboot</b></a>');
 });

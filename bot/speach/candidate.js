@@ -59,9 +59,6 @@ function Candidate(event) {
 
         },
 
-        isAuth: function(event, callback) {
-
-        },
 
         auth: function(event, callback) {
             

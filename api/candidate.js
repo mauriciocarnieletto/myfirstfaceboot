@@ -9,7 +9,7 @@ var querystring = require('querystring');
  */
 function Candidate() {
 
-    var baseApiRout = 'http://localhost:3001/api/candidate';
+    var baseApiRout = 'https://lyceumexapi.herokuapp.com/api/candidate/';
 
     return {
 
