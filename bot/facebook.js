@@ -102,7 +102,7 @@ function Facebook() {
                     var arr = event.postback.payload.split('->');
 
                     var speach = require('../bot/speach/'+arr[0]+'.js')(event);
-
+                    console.log(speach);
                     message = speach[arr[1]];
                 }
                 
