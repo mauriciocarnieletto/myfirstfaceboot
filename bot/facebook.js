@@ -5,6 +5,8 @@ const myCache = new NodeCache();
 // Request
 var request     = require('request');
 
+var util        = require('util');
+
 
 /*
  *  storeMessage
@@ -27,13 +29,15 @@ function getPreviousEvent (event) {
 };
 
 /*
- * sendMessage   
+ * sendMessage , res  
  * Get previouse message from user
  */
-function sendMessage (recipientId, message) {
-
+function sendMessage (recipientId, message, res) {
+    res.send(message);
     console.log('---------------------message----------------------');
-    console.log({
+    console.log(util.inspect(message));
+    console.log('---------------------inspect----------------------');
+    console.log(util.inspect({
         url: 'https://graph.facebook.com/v2.6/me/messages',
         qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
         method: 'POST',
@@ -41,23 +45,23 @@ function sendMessage (recipientId, message) {
             recipient: { id: recipientId },
             message: message,
         }
-    });
+    }));
 
-    request({
-        url: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
-        method: 'POST',
-        json: {
-            recipient: { id: recipientId },
-            message: message,
-        }
-    }, function(error, response, body) {
-        if (error) {
-            console.log('Error sending message: ', error);
-        } else if (response.body.error) {
-            console.log('Error: ', response.body.error);
-        }
-    });
+    // request({
+    //     url: 'https://graph.facebook.com/v2.6/me/messages',
+    //     qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
+    //     method: 'POST',
+    //     json: {
+    //         recipient: { id: recipientId },
+    //         message: message,
+    //     }
+    // }, function(error, response, body) {
+    //     if (error) {
+    //         console.log('Error sending message: ', error);
+    //     } else if (response.body.error) {
+    //         console.log('Error: ', response.body.error);
+    //     }
+    // });
 };
 
 /**
@@ -73,16 +77,11 @@ function Facebook() {
          */
         chat: function (events, req, res) {
 
-            console.log('star chat');
-
             for (i = 0; i < events.length; i++) {
 
                 var message = {},
                     event = events[i];
 
-                console.log('---------------------- event -------------------');
-
-                console.log(event);
                 event.previousEvent = getPreviousEvent(event);
 
                 if (!event.previousEvent.nextPostBack && event.message && event.message.text) {
@@ -90,7 +89,7 @@ function Facebook() {
                     message = { 'text': 'Desculpe, não entendi.' };
 
                 } else if(event.previousEvent.nextPostBack && event.message && event.message.text) {
-                    console.log('next post');
+
                     var arr = event.previousEvent.nextPostBack.payload.split('->');
 
                     var speach = require('../bot/speach/'+arr[0]+'.js')(event);
@@ -98,27 +97,21 @@ function Facebook() {
                     message = speach[arr[1]];
 
                 } else if (event.postback) {
-                    console.log('postback');
                     var arr = event.postback.payload.split('->');
 
                     var speach = require('../bot/speach/'+arr[0]+'.js')(event);
-                    console.log(speach);
+
                     message = speach[arr[1]];
                 }
-                console.log(typeof message);
                 if(typeof message === "function") {
 
-                    console.log('call');
                     message(event, function(newMessage) {
-
-                        console.log('newMessage');
-                        console.log(newMessage);
 
                         if(typeof newMessage.nextPostBack !== "undefined" ) event.nextPostBack = newMessage.nextPostBack;
 
                         storeMessage(event);
 
-                        sendMessage(event.sender.id, newMessage);
+                        sendMessage(event.sender.id, newMessage, res);
             
                     });
 
@@ -126,7 +119,7 @@ function Facebook() {
 
                     storeMessage(event);
 
-                    sendMessage(event.sender.id, message);
+                    sendMessage(event.sender.id, message, res);
                 }
            }
         },

@@ -14,7 +14,7 @@ var speach = {
                 'askedCandidateId': true,
                 'cpf': '' 
             },
-            'payload': "candidate->auth"
+            'payload': "candidate->welcomeMenu"
         }
     }
 };
@@ -30,27 +30,27 @@ function Candidate(event) {
     return {
 
         welcomeMenu: function(event, callback) {
-            console.log('welcome');
+
             return callback({
                 "attachment": {
                     "type": "template",
                     "payload": {
                         "template_type": "generic",
                         "elements": [{
-                            "title": "Bem vindo Candidato",
-                            "subtitle": "Selecione uma opção",
+                            "title": "Bem vindo Candidato!",
+                            "subtitle": "Selecione uma opção para continuar",
                             "buttons": [{
                                 "type": "postback",
                                 "title": "Informações Financeiras",
-                                "payload": "candidate->auth"
+                                "payload": "candidate->paymentInformationMenu"
                             },{
                                 "type": "postback",
                                 "title": "Informações do Concurso",
-                                "payload": "candidate->auth"
+                                "payload": "candidate->contestInformationMenu"
                             },{
                                 "type": "postback",
                                 "title": "Outros",
-                                "payload": "candidate->auth"
+                                "payload": "candidate->otherInformation"
                             }]
                         }]
                     }
@@ -78,9 +78,13 @@ function Candidate(event) {
                         filter.cpf = event.message.text;
                 
                         candidateApi.get(filter, function(response) {
+    
+                            if(!JSON.parse(response)[0]) {
 
-                            if(response.length == 0) 
+                                speach.askForCandidateCpf.text = "Não encontrei nenhum candidato com este CPF, por favor, digite novamente :)";
+
                                 return callback(speach.askForCandidateCpf);
+                            }
 
                             speach.askForCandidateId.nextPostBack.params.cpf = event.message.text;
 
@@ -100,9 +104,12 @@ function Candidate(event) {
 
                         candidateApi.get(filter, function(response) {
 
-                            if(response.length == 0) {
+                            if(!JSON.parse(response)[0]) {
 
                                 speach.nextPostBack.params.cpf = event.previousEvent.nextPostBack.params.cpf;
+
+                                speach.askForCandidateId.text = "Você digitou um código não válido para este Cpf. Vamos tentar mais uma vez? :)";
+                                speach.askForCandidateId.nextPostback = "candidate->auth";
 
                                 return callback(speach.askForCandidateId);
                             }
@@ -116,12 +123,8 @@ function Candidate(event) {
 
                             candidate.facebookId = event.sender.id;
                             
-                            console.log('=======candidate before put ========');
-                            console.log(JSON.stringify(candidate));
-                            
                             candidateApi.put(candidateId, candidate, function (response) {
-                                console.log('=======candidate after put ========');
-                                console.log(response);
+
                                 return callback(speach.askForCandidateId);
                             });
 
@@ -151,21 +154,21 @@ function Candidate(event) {
                     "payload": {
                         "template_type": "generic",
                         "elements": [{
-                            "title": "Bem vindo Candidato",
+                            "title": "Informações Financeiras",
                             "subtitle": "Selecione uma opção",
                             "image_url": "https://image.shutterstock.com/display_pic_with_logo/2552089/236656255/stock-photo-optical-form-of-an-examination-236656255.jpg",
                             "buttons": [{
-                                "type": "postback",
-                                "title": "Informações Financeiras",
-                                "payload": "auth&candidatePaymentInformation"
+                                "type": "web_url",
+                                "title": "Segunda Via Boleto",
+                                "url": "https://upload.wikimedia.org/wikipedia/commons/c/c7/BoletoBancario.png"
                             },{
                                 "type": "postback",
-                                "title": "Informações do Concurso",
-                                "payload": "auth&candidateContestInformation"
+                                "title": "Nota Fiscal",
+                                "payload": "candidate->nf"
                             },{
                                 "type": "postback",
                                 "title": "Outros",
-                                "payload": "candidateOtherInformation"
+                                "payload": "candidate->otherInformation"
                             }]
                         }]
                     }
@@ -182,21 +185,21 @@ function Candidate(event) {
                     "payload": {
                         "template_type": "generic",
                         "elements": [{
-                            "title": "Bem vindo Candidato",
+                            "title": "Informações sobre o concurso",
                             "subtitle": "Selecione uma opção",
                             "image_url": "https://image.shutterstock.com/display_pic_with_logo/2552089/236656255/stock-photo-optical-form-of-an-examination-236656255.jpg",
                             "buttons": [{
                                 "type": "postback",
-                                "title": "Informações Financeiras",
+                                "title": "Local da Prova",
                                 "payload": "auth&candidatePaymentInformation"
                             },{
                                 "type": "postback",
-                                "title": "Informações do Concurso",
-                                "payload": "auth&candidateContestInformation"
+                                "title": "Como posso me preparar?",
+                                "payload": "candidate->howCanIPrepareMyself"
                             },{
                                 "type": "postback",
                                 "title": "Outros",
-                                "payload": "candidateOtherInformation"
+                                "payload": "candidate->otherInformation"
                             }]
                         }]
                     }
@@ -204,11 +207,21 @@ function Candidate(event) {
             });
         },
 
+        howCanIPrepareMyself: function (event, callback) {
+
+            return callback({'text': 'Preparamos um simulado muito bacana para você se preparar para nosso processo seletivo, veja neste link www.website.com'});
+        },
+
+        otherInformation: function (event, callback) {
+
+            return calback({'text': 'Por favor, digite sobre o que você deseja falar.'});
+        },
+
         subscribe: function (event, callback) {
 
-            var step = [
+            // var step = [
                 // Selecione o curso
-                {
+                return callback({
                     "attachment": {
                         "type": "template",
                         "payload": {
@@ -311,22 +324,22 @@ function Candidate(event) {
                             ]  
                         }
                     }
-                },
+                 });
 
-                // Selecione o turno
-                {},
-                // Digite seu nome
-                {},
-                // Digite seu cpf
-                {},
-                // Digite seu celular
-                {},
-                // Digite seu email
-                {},
-                // Canhoto?
-                {},
-                // Trainee
-                {}
+                // // Selecione o turno
+                // {},
+                // // Digite seu nome
+                // {},
+                // // Digite seu cpf
+                // {},
+                // // Digite seu celular
+                // {},
+                // // Digite seu email
+                // {},
+                // // Canhoto?
+                // {},
+                // // Trainee
+                // {}
  
             ];
 
