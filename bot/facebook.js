@@ -105,12 +105,11 @@ function Facebook() {
                     console.log(speach);
                     message = speach[arr[1]];
                 }
-                
-                console.log(typeof message);
+
                 if(typeof message === "function") {
 
                     message(event, function(newMessage) {
-
+                        console.log(newMessage);
                         if(typeof newMessage.nextPostBack !== "undefined" ) event.nextPostBack = newMessage.nextPostBack;
 
                         storeMessage(event);
