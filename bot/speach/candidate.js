@@ -31,7 +31,7 @@ function Candidate(event) {
 
         welcomeMenu: function(event, callback) {
             console.log('welcome');
-            return {
+            return callback({
                 "attachment": {
                     "type": "template",
                     "payload": {
@@ -55,7 +55,7 @@ function Candidate(event) {
                         }]
                     }
                 }
-            };
+            });
 
         },
 
@@ -145,7 +145,7 @@ function Candidate(event) {
 
         paymentInformationMenu: function(event, callback) {
 
-            return {
+            return callback({
                 "attachment": {
                     "type": "template",
                     "payload": {
@@ -170,13 +170,13 @@ function Candidate(event) {
                         }]
                     }
                 }
-            };
+            });
 
         },
 
         contestInformationMenu: function(event, callback) {
 
-            return {
+            return callback({
                 "attachment": {
                     "type": "template",
                     "payload": {
@@ -201,7 +201,7 @@ function Candidate(event) {
                         }]
                     }
                 }
-            };
+            });
         },
 
         subscribe: function (event, callback) {
@@ -329,7 +329,6 @@ function Candidate(event) {
                 {}
  
             ];
-
         }
 
     };
