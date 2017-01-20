@@ -105,9 +105,10 @@ function Facebook() {
                     console.log(speach);
                     message = speach[arr[1]];
                 }
-
+                console.log(typeof message);
                 if(typeof message === "function") {
 
+                    console.log('call');
                     message(event, function(newMessage) {
                         console.log('newMessage');
                         console.log(newMessage);
