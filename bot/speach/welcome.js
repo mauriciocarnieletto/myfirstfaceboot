@@ -17,12 +17,16 @@ function Welcome(event) {
                                 "image_url": "https://image.shutterstock.com/display_pic_with_logo/2552089/236656255/stock-photo-optical-form-of-an-examination-236656255.jpg",
                                 "buttons": [{
                                     "type": "postback",
-                                    "title": "Ver Opções",
+                                    "title": "Sou Candidato",
                                     "payload": "candidate->welcomeMenu"
                                 },{
                                     "type": "postback",
-                                    "title": "Ver Opções",
-                                    "payload": "candidate->contestInformation"
+                                    "title": "Inscrever",
+                                    "payload": "candidate->subscribe"
+                                },{
+                                    "type": "postback",
+                                    "title": "Informações",
+                                    "payload": "candidate->contestInformationMenu"
                                 }]
                             },{
                                 "title": "Aluno(a)",

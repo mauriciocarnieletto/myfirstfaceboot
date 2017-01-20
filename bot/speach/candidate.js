@@ -329,6 +329,8 @@ function Candidate(event) {
                 {}
  
             ];
+
+            return callback(step[0]);
         }
 
     };
