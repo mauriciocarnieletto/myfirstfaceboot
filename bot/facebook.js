@@ -111,6 +111,8 @@ function Facebook() {
 
                         storeMessage(event);
 
+                        delete event.nextPostBack;
+
                         sendMessage(event.sender.id, newMessage, res);
             
                     });
