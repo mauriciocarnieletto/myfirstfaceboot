@@ -341,7 +341,7 @@ function Candidate(event) {
                 // // Trainee
                 // {}
  
-            ];
+            // ];
 
             return callback(step[0]);
         }

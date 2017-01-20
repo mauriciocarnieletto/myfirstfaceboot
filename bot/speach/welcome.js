@@ -18,15 +18,11 @@ function Welcome(event) {
                                 "buttons": [{
                                     "type": "postback",
                                     "title": "Sou Candidato",
-                                    "payload": "candidate->welcomeMenu"
+                                    "payload": "candidate->auth"
                                 },{
                                     "type": "postback",
-                                    "title": "Inscrever",
+                                    "title": "Quero ser Aluno Opet",
                                     "payload": "candidate->subscribe"
-                                },{
-                                    "type": "postback",
-                                    "title": "Informações",
-                                    "payload": "candidate->contestInformationMenu"
                                 }]
                             },{
                                 "title": "Aluno(a)",
