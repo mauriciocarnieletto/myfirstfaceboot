@@ -221,7 +221,8 @@ function Candidate(event) {
 
             // var step = [
                 // Selecione o curso
-                return callback({
+                return callback(
+                {
                     "attachment": {
                         "type": "template",
                         "payload": {
@@ -229,72 +230,42 @@ function Candidate(event) {
                             "elements": [
                                 {
                                     "title": "Direito",
-                                    "subtitle": "See all our colors",
+                                    "subtitle": "Bacharelado | 4 anos",
                                     "default_action": {
-                                        "type": "web_url",
-                                        "url": "https://peterssendreceiveapp.ngrok.io/shop_collection"
+                                        "type": "postback",
+                                        "title": "Escolher",
+                                        "payload": ""
                                     },
-                                    "buttons": [
-                                        {
-                                            "title": "View",
-                                            "type": "web_url",
-                                            "url": "https://peterssendreceiveapp.ngrok.io/collection"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "title": "Classic White T-Shirt",
-                                    "image_url": "https://peterssendreceiveapp.ngrok.io/img/white-t-shirt.png",
-                                    "subtitle": "100% Cotton, 200% Comfortable",
+                                },{
+                                    "title": "Admiistração",
+                                    "subtitle": "Bacharelado | 4 anos",
                                     "default_action": {
-                                        "type": "web_url",
-                                        "url": "https://peterssendreceiveapp.ngrok.io/view?item=100"
+                                        "type": "postback",
+                                        "title": "Escolher",
+                                        "payload": ""
                                     },
-                                    "buttons": [
-                                        {
-                                            "title": "Shop Now",
-                                            "type": "web_url",
-                                            "url": "https://peterssendreceiveapp.ngrok.io/shop?item=100"
-                                        }
-                                    ]                
-                                },
-                                {
-                                    "title": "Classic Blue T-Shirt",
-                                    "image_url": "https://peterssendreceiveapp.ngrok.io/img/blue-t-shirt.png",
-                                    "subtitle": "100% Cotton, 200% Comfortable",
+                                },{
+                                    "title": "Engenharia Elétrica",
+                                    "subtitle": "Bacharelado | 4 anos",
                                     "default_action": {
-                                        "title": "Shop Now",
-                                        "type": "web_url",
-                                        "url": "https://peterssendreceiveapp.ngrok.io/view?item=101"
+                                        "type": "postback",
+                                        "title": "Escolher",
+                                        "payload": ""
                                     },
-                                    "buttons": [
-                                        {
-                                            "title": "Shop Now",
-                                            "type": "web_url",
-                                            "url": "https://peterssendreceiveapp.ngrok.io/shop?item=101"                    
-                                        }
-                                    ]                
-                                },
-                                {
-                                    "title": "Classic Black T-Shirt",
-                                    "image_url": "https://peterssendreceiveapp.ngrok.io/img/black-t-shirt.png",
-                                    "subtitle": "100% Cotton, 200% Comfortable",
+                                },{
+                                    "title": "Cosmética",
+                                    "subtitle": "Bacharelado | 4 anos",
                                     "default_action": {
-                                        "type": "web_url",
-                                        "url": "https://peterssendreceiveapp.ngrok.io/view?item=102" 
+                                        "type": "postback",
+                                        "title": "Escolher",
+                                        "payload": ""
                                     },
-                                    "buttons": [
-                                        {
-                                            "title": "Shop Now",
-                                            "type": "web_url",
-                                            "url": "https://peterssendreceiveapp.ngrok.io/shop?item=102",
-                                        }
-                                    ]                
                                 }
+
                             ],
                              "buttons": [
                                 {
-                                    "title": "View More",
+                                    "title": "Ver Mais",
                                     "type": "postback",
                                     "payload": "payload"                        
                                 }
