@@ -54,6 +54,8 @@ app.post('/webhook', function (req, res) {
 
     if (!req.body.entry) return res.sendStatus(403);
 
+    console.log(req.body.entry[0].messaging, req, res);
+
     facebook.chat(req.body.entry[0].messaging, req, res, function () {
 
         res.sendStatus(200);
