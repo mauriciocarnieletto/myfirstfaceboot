@@ -73,6 +73,8 @@ function Facebook() {
          */
         chat: function (events, req, res) {
 
+            console.log('star chat');
+
             for (i = 0; i < events.length; i++) {
 
                 var message = {},
