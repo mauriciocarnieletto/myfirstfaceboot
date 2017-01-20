@@ -3,9 +3,9 @@ function Welcome(event) {
     
     return {
 
-         welcomeMenu: function(event) {
+         welcomeMenu: function(event, callback) {
 
-            return {
+            return callback({
                 "attachment": {
                     "type": "template",
                     "payload": {
@@ -41,7 +41,7 @@ function Welcome(event) {
                         }]
                     }
                 }
-            };
+            });
         }
     };
 };
