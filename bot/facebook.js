@@ -109,6 +109,7 @@ function Facebook() {
                 if(typeof message === "function") {
 
                     message(event, function(newMessage) {
+                        console.log('newMessage');
                         console.log(newMessage);
                         if(typeof newMessage.nextPostBack !== "undefined" ) event.nextPostBack = newMessage.nextPostBack;
 
