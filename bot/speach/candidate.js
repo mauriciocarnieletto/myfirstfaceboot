@@ -232,19 +232,13 @@ function Candidate(event) {
                                     "subtitle": "See all our colors",
                                     "default_action": {
                                         "type": "web_url",
-                                        "url": "https://peterssendreceiveapp.ngrok.io/shop_collection",
-                                        "messenger_extensions": true,
-                                        "webview_height_ratio": "tall",
-                                        "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+                                        "url": "https://peterssendreceiveapp.ngrok.io/shop_collection"
                                     },
                                     "buttons": [
                                         {
                                             "title": "View",
                                             "type": "web_url",
-                                            "url": "https://peterssendreceiveapp.ngrok.io/collection",
-                                            "messenger_extensions": true,
-                                            "webview_height_ratio": "tall",
-                                            "fallback_url": "https://peterssendreceiveapp.ngrok.io/"                        
+                                            "url": "https://peterssendreceiveapp.ngrok.io/collection"
                                         }
                                     ]
                                 },
@@ -254,19 +248,13 @@ function Candidate(event) {
                                     "subtitle": "100% Cotton, 200% Comfortable",
                                     "default_action": {
                                         "type": "web_url",
-                                        "url": "https://peterssendreceiveapp.ngrok.io/view?item=100",
-                                        "messenger_extensions": true,
-                                        "webview_height_ratio": "tall",
-                                        "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+                                        "url": "https://peterssendreceiveapp.ngrok.io/view?item=100"
                                     },
                                     "buttons": [
                                         {
                                             "title": "Shop Now",
                                             "type": "web_url",
-                                            "url": "https://peterssendreceiveapp.ngrok.io/shop?item=100",
-                                            "messenger_extensions": true,
-                                            "webview_height_ratio": "tall",
-                                            "fallback_url": "https://peterssendreceiveapp.ngrok.io/"                        
+                                            "url": "https://peterssendreceiveapp.ngrok.io/shop?item=100"
                                         }
                                     ]                
                                 },
@@ -275,20 +263,15 @@ function Candidate(event) {
                                     "image_url": "https://peterssendreceiveapp.ngrok.io/img/blue-t-shirt.png",
                                     "subtitle": "100% Cotton, 200% Comfortable",
                                     "default_action": {
+                                        "title": "Shop Now",
                                         "type": "web_url",
-                                        "url": "https://peterssendreceiveapp.ngrok.io/view?item=101",
-                                        "messenger_extensions": true,
-                                        "webview_height_ratio": "tall",
-                                        "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+                                        "url": "https://peterssendreceiveapp.ngrok.io/view?item=101"
                                     },
                                     "buttons": [
                                         {
                                             "title": "Shop Now",
                                             "type": "web_url",
-                                            "url": "https://peterssendreceiveapp.ngrok.io/shop?item=101",
-                                            "messenger_extensions": true,
-                                            "webview_height_ratio": "tall",
-                                            "fallback_url": "https://peterssendreceiveapp.ngrok.io/"                        
+                                            "url": "https://peterssendreceiveapp.ngrok.io/shop?item=101"                    
                                         }
                                     ]                
                                 },
@@ -298,19 +281,13 @@ function Candidate(event) {
                                     "subtitle": "100% Cotton, 200% Comfortable",
                                     "default_action": {
                                         "type": "web_url",
-                                        "url": "https://peterssendreceiveapp.ngrok.io/view?item=102",
-                                        "messenger_extensions": true,
-                                        "webview_height_ratio": "tall",
-                                        "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+                                        "url": "https://peterssendreceiveapp.ngrok.io/view?item=102" 
                                     },
                                     "buttons": [
                                         {
                                             "title": "Shop Now",
                                             "type": "web_url",
                                             "url": "https://peterssendreceiveapp.ngrok.io/shop?item=102",
-                                            "messenger_extensions": true,
-                                            "webview_height_ratio": "tall",
-                                            "fallback_url": "https://peterssendreceiveapp.ngrok.io/"                        
                                         }
                                     ]                
                                 }
