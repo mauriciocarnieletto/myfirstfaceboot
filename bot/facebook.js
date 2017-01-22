@@ -77,6 +77,8 @@ function Facebook() {
          */
         chat: function (events, req, res) {
 
+console.log('start chat');
+
             for (i = 0; i < events.length; i++) {
 
                 var message = {},
@@ -84,12 +86,15 @@ function Facebook() {
 
                 event.previousEvent = getPreviousEvent(event);
 
+console.log('got previousEvent', event);
+
                 if (!event.previousEvent.nextPostBack && event.message && event.message.text) {
+console.log('message text');
 
                     message = { 'text': 'Desculpe, não entendi.' };
 
                 } else if(event.previousEvent.nextPostBack && event.message && event.message.text) {
-
+console.log('next postback');
                     var arr = event.previousEvent.nextPostBack.payload.split('->');
 
                     var speach = require('../bot/speach/'+arr[0]+'.js')(event);
@@ -97,12 +102,17 @@ function Facebook() {
                     message = speach[arr[1]];
 
                 } else if (event.postback) {
+console.log('postback'); 
+
                     var arr = event.postback.payload.split('->');
 
                     var speach = require('../bot/speach/'+arr[0]+'.js')(event);
 
                     message = speach[arr[1]];
                 }
+
+console.log('message: ', message);
+
                 if(typeof message === "function") {
 
                     message(event, function(newMessage) {
