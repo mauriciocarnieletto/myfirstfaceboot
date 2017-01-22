@@ -1,3 +1,4 @@
+'use strict'
 // NodeCache
 const NodeCache = require('node-cache');
 const myCache = new NodeCache();
@@ -6,63 +7,6 @@ const myCache = new NodeCache();
 var request     = require('request');
 
 var util        = require('util');
-
-
-/*
- *  storeMessage
- *  Stores the current message in memory
- */
-function storeMessage (event) {
-
-    return myCache.set(event.sender.id, event);
-};
-
-/*
- * getPreviousEvent
- * Get previouse message from user
- */
-function getPreviousEvent (event) {
-
-    var prevEv = myCache.get(event.sender.id);
-
-    return (prevEv) ? prevEv : {};
-};
-
-/*
- * sendMessage , res  
- * Get previouse message from user
- */
-function sendMessage (recipientId, message, res) {
-    // res.send(message);
-    // console.log('---------------------message----------------------');
-    // console.log(util.inspect(message));
-    // console.log('---------------------inspect----------------------');
-    // console.log(util.inspect({
-    //     url: 'https://graph.facebook.com/v2.6/me/messages',
-    //     qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
-    //     method: 'POST',
-    //     json: {
-    //         recipient: { id: recipientId },
-    //         message: message,
-    //     }
-    // }));
-
-    request({
-        url: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
-        method: 'POST',
-        json: {
-            recipient: { id: recipientId },
-            message: message,
-        }
-    }, function(error, response, body) {
-        if (error) {
-            console.log('Error sending message: ', error);
-        } else if (response.body.error) {
-            console.log('Error: ', response.body.error);
-        }
-    });
-};
 
 /**
  * Facebook
@@ -77,61 +21,41 @@ function Facebook() {
          */
         chat: function (events, req, res) {
 
-console.log('start chat');
+            var that = this;
 
-            for (i = 0; i < events.length; i++) {
+            for (var i = 0; i < events.length; i++) {
 
                 var message = {},
                     event = events[i];
 
-                event.previousEvent = getPreviousEvent(event);
-
-console.log('got previousEvent', event);
+                event.previousEvent = that.getPreviousEvent(event);
 
                 if (!event.previousEvent.nextPostBack && event.message && event.message.text) {
-console.log('message text');
 
                     message = { 'text': 'Desculpe, não entendi.' };
 
                 } else if(event.previousEvent.nextPostBack && event.message && event.message.text) {
-console.log('next postback');
+
                     var arr = event.previousEvent.nextPostBack.payload.split('->');
-
                     var speach = require('../bot/speach/'+arr[0]+'.js')(event);
-
                     message = speach[arr[1]];
 
                 } else if (event.postback) {
-console.log('postback'); 
-
                     var arr = event.postback.payload.split('->');
-
                     var speach = require('../bot/speach/'+arr[0]+'.js')(event);
-
                     message = speach[arr[1]];
                 }
 
-console.log('message: ', message);
-
                 if(typeof message === "function") {
-
                     message(event, function(newMessage) {
-
                         if(typeof newMessage.nextPostBack !== "undefined" ) event.nextPostBack = newMessage.nextPostBack;
-
-                        storeMessage(event);
-
+                        that.storeMessage(event);
                         delete newMessage.nextPostBack;
-
-                        sendMessage(event.sender.id, newMessage, res);
-            
+                        that.sendMessage(event.sender.id, newMessage, res, req);
                     });
-
                 } else {
-
-                    storeMessage(event);
-
-                    sendMessage(event.sender.id, message, res);
+                    that.storeMessage(event);
+                    that.sendMessage(event.sender.id, message, res, req);
                 }
            }
         },
@@ -160,6 +84,73 @@ console.log('message: ', message);
                 }
             });
         },
+
+        /*
+         *  storeMessage
+         *  Stores the current message in memory
+         */
+        storeMessage: function (event) {
+
+            return myCache.set(event.sender.id, event);
+        },
+
+        /*
+         * getPreviousEvent
+         * Get previouse message from user
+         */
+        getPreviousEvent: function (event) {
+
+            var prevEv = myCache.get(event.sender.id);
+
+            return (prevEv) ? prevEv : {};
+        },
+
+        /*
+         * sendMessage , res  
+         * Get previouse message from user
+         */
+        sendMessage: function (recipientId, message, res, req) {
+
+            console.log('---------------------message----------------------');
+            console.log(util.inspect(message));
+
+            if(req.query['debug'] == 1) {
+
+                res.send(JSON.stringify(message));
+                console.log('---------------------message----------------------');
+                console.log(util.inspect(message));
+                console.log('---------------------inspect----------------------');
+
+                console.log(util.inspect({
+                    url: 'https://graph.facebook.com/v2.6/me/messages',
+                    qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
+                    method: 'POST',
+                    json: {
+                        recipient: { id: recipientId },
+                        message: message,
+                    }
+                }));
+            } else {
+                request({
+                    url: 'https://graph.facebook.com/v2.6/me/messages',
+                    qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
+                    method: 'POST',
+                    json: {
+                        recipient: { id: recipientId },
+                        message: message,
+                    }
+                }, function(error, response, body) {
+                    if (error) {
+                        console.log("=====================Error=====================");
+                        console.log('Error sending message: ', error);
+                    } else if (response.body.error) {
+                        console.log("=====================body error=====================");
+                        console.log('Error: ', response.body.error);
+                    }
+                });
+            }
+        },
+
     };
 };
 

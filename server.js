@@ -1,3 +1,4 @@
+'use strict'
 // Dependencies
 var express     = require('express');
 var bodyParser  = require('body-parser');
@@ -14,28 +15,25 @@ var facebook = require('./bot/facebook.js')();
 // Server frontpage
 app.get('/', function (req, res) {
 
-    // req.body.entry = [
-    //         {
-    //             messaging: [{
-    //                 message: {
-    //                     text: (typeof req.query['message'] !== "undefined") ? req.query['message'] : undefined,
-    //                 },
-    //                 postback: {
-    //                     payload: (typeof req.query['payload'] !== "undefined") ? req.query['payload'] : undefined,
-    //                 },
-    //                 sender: {
-    //                     id: req.query['id'],
-    //                 }
-    //             }]
-    //         }
-    // ];
+    req.body.entry = [
+            {
+                messaging: [{
+                    message: {
+                        text: (typeof req.query['message'] !== "undefined") ? req.query['message'] : undefined,
+                    },
+                    postback: {
+                        payload: (typeof req.query['payload'] !== "undefined") ? req.query['payload'] : undefined,
+                    },
+                    sender: {
+                        id: req.query['id'],
+                    }
+                }]
+            }
+    ];
 
-    // if (!req.body.entry) return res.sendStatus(403);
+    if (!req.body.entry) return res.sendStatus(403);
 
-    // facebook.chat(req.body.entry[0].messaging, req, res, function () {
-
-    //     // res.sendStatus(200);
-    // });
+    facebook.chat(req.body.entry[0].messaging, req, res, function () { });
 
 
     // res.send('<h1>This is TestBot Server!</h1> If you want to check it, access: <a href="https://www.facebook.com/testmyfirstfaceboot/"><b>@testmyfirstfaceboot</b></a>');
@@ -71,8 +69,6 @@ app.post('/webhook', function (req, res) {
 
 });
 
-
 // Service start
 app.listen((process.env.PORT || 3000));
-
 console.log('Faceboot is Running at ' + (process.env.PORT || 3000));
