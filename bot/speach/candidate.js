@@ -61,7 +61,8 @@ function Candidate(event) {
 
 
         auth: function(event, callback) {
-            
+console.log('-----------------------event-----------------');
+console.log(event); 
             var filter = {},
                 message;
 console.log('-1');
