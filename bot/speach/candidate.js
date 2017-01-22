@@ -64,30 +64,30 @@ function Candidate(event) {
             
             var filter = {},
                 message;
-
+console.log('-1');
             // if the user is sending a message, must have a nextpostback
             if((event.message && event.message.text)) {
-
+console.log('-2');
                 // if there is another nextPostBack object
                 if(event.previousEvent.nextPostBack) {
-
+console.log('-3');
                     // if the previous postback has asked for candidate cpf and candidate is suplying his cpf now
                     if(event.previousEvent.nextPostBack.params.askedCpf 
                         && typeof event.previousEvent.nextPostBack.params.cpf === "undefined") {
-
+console.log('-4');
                         filter.cpf = event.message.text;
                 
                         candidateApi.get(filter, function(response) {
     
                             if(!JSON.parse(response)[0]) {
-
+console.log('-5');
                                 speach.askForCandidateCpf.text = "Não encontrei nenhum candidato com este CPF, por favor, digite novamente :)";
 
                                 return callback(speach.askForCandidateCpf);
                             }
 
                             speach.askForCandidateId.nextPostBack.params.cpf = event.message.text;
-
+console.log('-6');
                             return callback(speach.askForCandidateId);
                         });
 
@@ -98,14 +98,14 @@ function Candidate(event) {
                         && event.previousEvent.nextPostBack.params.askedCandidateId 
                         && typeof event.previousEvent.nextPostBack.params.cpf
                         && typeof event.previousEvent.nextPostBack.params.candidateId === "undefined") {
-
+console.log('-7');
                         filter.ra = event.message.text;
                         filter.cpf = event.previousEvent.nextPostBack.params.cpf;
 
                         candidateApi.get(filter, function(response) {
 
                             if(!JSON.parse(response)[0]) {
-
+console.log('-8');
                                 speach.nextPostBack.params.cpf = event.previousEvent.nextPostBack.params.cpf;
 
                                 speach.askForCandidateId.text = "Você digitou um código não válido para este Cpf. Vamos tentar mais uma vez? :)";
@@ -124,12 +124,12 @@ function Candidate(event) {
                             candidate.facebookId = event.sender.id;
                             
                             candidateApi.put(candidateId, candidate, function (response) {
-
+console.log('-9');
                                 return callback(speach.askForCandidateId);
                             });
 
                         });
-
+console.log('0000');
                     }
 
 
