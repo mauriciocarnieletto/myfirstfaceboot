@@ -10,37 +10,21 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // FacebookBot
-var facebook = require('./bot/facebook.js')();
+var facebook = require('./bot/facebook.js');
+
+var fbot = facebook({
+    access_token: (process.env.PAGE_ACCESS_TOKEN || "EAADQ9m8UU5YBAJuOGpPdSsOQnEKCtBYaT4JFSJF75Br5D6GpsVseiZBO9nj9rqM1S8fAZCArZCK4ANKHpIXTFZCXNrwHOC6s1fcDwAKuosg5POz64KJIW0XinFv3ftomJQAPin5GmdUUPY3ERfhS1OYt6EkYlpaGpDPWuGOPIgZDZD")
+});
+
 
 // Server frontpage
 app.get('/', function (req, res) {
 
-    req.body.entry = [
-            {
-                messaging: [{
-                    message: {
-                        text: (typeof req.query['message'] !== "undefined") ? req.query['message'] : undefined,
-                    },
-                    postback: {
-                        payload: (typeof req.query['payload'] !== "undefined") ? req.query['payload'] : undefined,
-                    },
-                    sender: {
-                        id: req.query['id'],
-                    }
-                }]
-            }
-    ];
-
-    if (!req.body.entry) return res.sendStatus(403);
-
-    facebook.chat(req.body.entry[0].messaging, req, res, function () { });
-
-
-    // res.send('<h1>This is TestBot Server!</h1> If you want to check it, access: <a href="https://www.facebook.com/testmyfirstfaceboot/"><b>@testmyfirstfaceboot</b></a>');
+    res.send('<h1>This is TestBot Server!</h1> If you want to check it, access: <a href="https://www.bot.com/testmyfirstfaceboot/"><b>@testmyfirstfaceboot</b></a>');
 });
 
 /*
- * Handler to the facebooks authentication
+ * Handler to the fb authentication
  */
 app.get('/webhook', function (req, res) {
 
@@ -62,7 +46,7 @@ app.post('/webhook', function (req, res) {
 
     if (!req.body.entry) return res.sendStatus(403);
 
-    facebook.chat(req.body.entry[0].messaging, req, res, function () {
+    fbot.chat(req.body.entry[0].messaging, req, res, function () {
 
         res.sendStatus(200);
     });

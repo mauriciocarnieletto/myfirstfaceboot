@@ -29,10 +29,10 @@ function Session() {
     	 */
     	set: function (sessionId, obj) {
 
-    		if(this.get(sessionIdn)) 
+    		if(this.get(sessionId)) 
     			return this.put(sessionId, obj);
 
-			return myCache.set(event.sender.id, obj);
+			return myCache.set(sessionId, obj);
     	},
     	/*
     	 * Update Session
