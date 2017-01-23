@@ -44,7 +44,7 @@ app.get('/', function (req, res) {
  */
 app.get('/webhook', function (req, res) {
 
-    if (req.query['hub.verify_token'] === 'EAADQ9m8UU5YBAMHitJLqnWCXepsxKgpyfMDOWUHclkkOFYUnZCFxbb6cXTyAAqWwRna0SrkqVhGHRrPo5xJ2O9zXZAQe7Qzt0gZCKVpooFAJgBOSZCEs4nmNbCuZCafpnWOs4yduLg9hRlR6utnGKbN2TuTmctglDZAkyC4SqnUAZDZD') {
+    if (req.query['hub.verify_token'] === 'jubileia') {
 
         res.send(req.query['hub.challenge']);
     } else {

@@ -1,17 +1,18 @@
 'use strict'
-// NodeCache
-const NodeCache = require('node-cache');
-const myCache = new NodeCache();
-
 // Request
-var request     = require('request');
+const request     = require('request');
+const util        = require('util');
 
-var util        = require('util');
+var Session       = require('../helpers/session.js');
 
 /**
  * Facebook
  */
 function Facebook() {
+
+    var fb = {
+        access_token: (process.env.PAGE_ACCESS_TOKEN || "EAADQ9m8UU5YBAJuOGpPdSsOQnEKCtBYaT4JFSJF75Br5D6GpsVseiZBO9nj9rqM1S8fAZCArZCK4ANKHpIXTFZCXNrwHOC6s1fcDwAKuosg5POz64KJIW0XinFv3ftomJQAPin5GmdUUPY3ERfhS1OYt6EkYlpaGpDPWuGOPIgZDZD")
+    };
 
     return {
 
@@ -22,42 +23,52 @@ function Facebook() {
         chat: function (events, req, res) {
 
             var that = this;
-
+ 
             for (var i = 0; i < events.length; i++) {
 
                 var message = {},
                     event = events[i];
 
-                event.previousEvent = that.getPreviousEvent(event);
+                if (event.message && event.message.text || event.postback) {
 
-                if (!event.previousEvent.nextPostBack && event.message && event.message.text) {
+                    event.previousEvent = that.getPreviousEvent(event);
 
-                    message = { 'text': 'Desculpe, não entendi.' };
+                    if (!event.previousEvent.nextPostBack && !event.postback) {
 
-                } else if(event.previousEvent.nextPostBack && event.message && event.message.text) {
+                        message = { 'text': 'Desculpe, não entendi.' };
 
-                    var arr = event.previousEvent.nextPostBack.payload.split('->');
-                    var speach = require('../bot/speach/'+arr[0]+'.js')(event);
-                    message = speach[arr[1]];
+                    } else if (
+                        (event.previousEvent.nextPostBack && event.message && event.message.text)
+                        || (event.postback)
+                    ) {
+                        var payload = (event.postback) ? event.postback.payload : event.previousEvent.nextPostBack.payload;
+                        
+                        var arr = payload.split('->');
+                        var speach = require('../bot/speach/'+arr[0]+'.js')(event);
 
-                } else if (event.postback) {
-                    var arr = event.postback.payload.split('->');
-                    var speach = require('../bot/speach/'+arr[0]+'.js')(event);
-                    message = speach[arr[1]];
-                }
+                        message = speach[arr[1]];
+                    }
 
-                if(typeof message === "function") {
-                    message(event, function(newMessage) {
-                        if(typeof newMessage.nextPostBack !== "undefined" ) event.nextPostBack = newMessage.nextPostBack;
+                    if(typeof message === "function") {
+
+                        message(event, function(newMessage) {
+
+                            if(typeof newMessage.nextPostBack !== "undefined" ) event.nextPostBack = newMessage.nextPostBack;
+
+                            that.storeMessage(event);
+
+                            that.sendMessage(event.sender.id, (typeof newMessage.nextPostBack !== "undefined" ) ? newMessage.message : newMessage , res, req);
+                        });
+                    } else {
+
+                        if(typeof message.nextPostBack !== "undefined" ) event.nextPostBack = message.nextPostBack;
+
                         that.storeMessage(event);
-                        delete newMessage.nextPostBack;
-                        that.sendMessage(event.sender.id, newMessage, res, req);
-                    });
-                } else {
-                    that.storeMessage(event);
-                    that.sendMessage(event.sender.id, message, res, req);
+
+                        that.sendMessage(event.sender.id, (typeof message.nextPostBack !== "undefined" ) ? message.message : message , res, req);
+                    }
                 }
-           }
+            }
         },
 
         /*
@@ -69,7 +80,7 @@ function Facebook() {
             return request({
                 url: 'https://graph.facebook.com/v2.6/${recipientId}',
                 qs: { 
-                    access_token: process.env.PAGE_ACCESS_TOKEN, 
+                    access_token: fb.access_token, 
                     fields: 'first_name,last_name,profile_pic,locale,timezone,gender' 
                 },
                 method: 'GET',
@@ -80,7 +91,7 @@ function Facebook() {
                 } else if (response.body.error) {
                     console.log('Error: ', response.body.error)
                 } else {
-                    storeUserData(event, response, body);
+                    Session.put(recipientId, { facebookData: body });
                 }
             });
         },
@@ -91,7 +102,7 @@ function Facebook() {
          */
         storeMessage: function (event) {
 
-            return myCache.set(event.sender.id, event);
+            return Session.set(event.sender.id, { previousEvent: event });
         },
 
         /*
@@ -100,9 +111,7 @@ function Facebook() {
          */
         getPreviousEvent: function (event) {
 
-            var prevEv = myCache.get(event.sender.id);
-
-            return (prevEv) ? prevEv : {};
+            return Session.get(event.sender.id);
         },
 
         /*
@@ -123,7 +132,7 @@ function Facebook() {
 
                 console.log(util.inspect({
                     url: 'https://graph.facebook.com/v2.6/me/messages',
-                    qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
+                    qs: { access_token: fb.access_token} ,
                     method: 'POST',
                     json: {
                         recipient: { id: recipientId },
@@ -133,7 +142,7 @@ function Facebook() {
             } else {
                 request({
                     url: 'https://graph.facebook.com/v2.6/me/messages',
-                    qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
+                    qs: { access_token: fb.access_token },
                     method: 'POST',
                     json: {
                         recipient: { id: recipientId },

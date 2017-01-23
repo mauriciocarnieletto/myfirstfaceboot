@@ -1,27 +1,7 @@
-var speach = {
-    "askForCandidateCpf": { 
-        'text': 'Digite seu CPF', 
-        'nextPostBack': { 
-            'payload': "candidate->auth",
-            'params': { 'askedCpf': true }
-        } 
-    }, 
-    "askForCandidateId": {
-        'text': 'Digite seu código de candidato',
-        'nextPostBack' : {
-            'params': { 
-                'askedCpf': true,
-                'askedCandidateId': true,
-                'cpf': '' 
-            },
-            'payload': "candidate->welcomeMenu"
-        }
-    }
-};
-
 const util = require('util');
 
 var candidateApi = require('../../api/candidate.js')();
+
 /**
  * Candidate Session
  */
@@ -59,93 +39,59 @@ function Candidate(event) {
 
         },
 
+        auth: function (event, callback) {
 
-        auth: function(event, callback) {
-console.log('-----------------------event-----------------');
-console.log(event); 
-            var filter = {},
-                message;
-console.log('-1');
-            // if the user is sending a message, must have a nextpostback
-            if((event.message && event.message.text)) {
-console.log('-2');
-                // if there is another nextPostBack object
-                if(event.previousEvent.nextPostBack) {
-console.log('-3');
-                    // if the previous postback has asked for candidate cpf and candidate is suplying his cpf now
-                    if(event.previousEvent.nextPostBack.params.askedCpf 
-                        && typeof event.previousEvent.nextPostBack.params.cpf === "undefined") {
-console.log('-4');
-                        filter.cpf = event.message.text;
-                
-                        candidateApi.get(filter, function(response) {
-    
-                            if(!JSON.parse(response)[0]) {
-console.log('-5');
-                                speach.askForCandidateCpf.text = "Não encontrei nenhum candidato com este CPF, por favor, digite novamente :)";
+            return this.askCPF(event, callback);
+        },
 
-                                return callback(speach.askForCandidateCpf);
-                            }
+        askCPF: function (event, callback) {
 
-                            speach.askForCandidateId.nextPostBack.params.cpf = event.message.text;
-console.log('-6');
-                            return callback(speach.askForCandidateId);
-                        });
-
-                    }
-
-                    // if the previous postback has asked for candidate cpf and candidate is suplying his cpf now
-                    else if(event.previousEvent.nextPostBack.params.askedCpf 
-                        && event.previousEvent.nextPostBack.params.askedCandidateId 
-                        && typeof event.previousEvent.nextPostBack.params.cpf
-                        && typeof event.previousEvent.nextPostBack.params.candidateId === "undefined") {
-console.log('-7');
-                        filter.ra = event.message.text;
-                        filter.cpf = event.previousEvent.nextPostBack.params.cpf;
-
-                        candidateApi.get(filter, function(response) {
-
-                            if(!JSON.parse(response)[0]) {
-console.log('-8');
-                                speach.nextPostBack.params.cpf = event.previousEvent.nextPostBack.params.cpf;
-
-                                speach.askForCandidateId.text = "Você digitou um código não válido para este Cpf. Vamos tentar mais uma vez? :)";
-                                speach.askForCandidateId.nextPostback = "candidate->auth";
-
-                                return callback(speach.askForCandidateId);
-                            }
-
-                            speach.askForCandidateId.ra = event.message.text;
-
-                            var candidate = JSON.parse(response)[0];
-                            var candidateId = candidate._id;
-
-                            delete candidate._id;
-
-                            candidate.facebookId = event.sender.id;
-                            
-                            candidateApi.put(candidateId, candidate, function (response) {
-console.log('-9');
-                                return callback(speach.askForCandidateId);
-                            });
-
-                        });
-console.log('0000');
-                    }
-
-
-                // respond user for the first time
-                } else {
-
-                    return callback(speach.askForCandidateCpf);
-                }
-
-            } else {
-
-                return callback(speach.askForCandidateCpf);
-            }
+            return callback({ 
+                'message': {
+                    'text': 'Digite seu CPF'
+                }, 
+                'nextPostback': { 
+                    'payload': "candidate->checkCPF",
+                } 
+            });            
 
         },
+
+        checkCPF: function (event, callback) {
+
+            var text,
+                payload,
+                params = {};
+
+            candidateApi.get({ cpf: event.message.text }, function(response) {
+
+                if(!JSON.parse(response)[0]) {
+
+                    text = "Não encontrei nenhum candidato com este CPF, por favor, digite novamente :)";
+                    payload = "candidate->checkCPF";
+                }
+
+                params.cpf = event.message.text;
+                payload = "candidate->askCandidateID";
+
+                return callback({ 
+                    'message': {
+                        'text': text
+                    }, 
+                    'nextPostback': { 
+                        'payload': payload
+                    } 
+                });
+            });
+        },
+
+        askCandidateID: function (event, callback) {
+
+        },
+
+        checkCandidateID: function (event, callback) {},
+
+        storeCandidateFacebookData: function (event, callback) {},
 
         paymentInformationMenu: function(event, callback) {
 
