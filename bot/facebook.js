@@ -1,4 +1,3 @@
-'use strict'
 // Request
 const request     = require('request');
 const util        = require('util');
@@ -39,17 +38,19 @@ function Facebook(fbConfig) {
                         var payload = (event.postback) ? event.postback.payload : nextPostBack.payload;
                         
                         var arr = payload.split('->');
-                        var speach = require('../bot/speach/'+arr[0]+'.js');
-
-                        console.log(speach);
+                        var speach = require('../bot/speach/'+arr[0]+'.js')();
 
                         message = speach[arr[1]];
                     }
 
+                    console.log('------------------------speach---------------------------');
+                    console.log(speach);
+                    console.log(message());
+
                     that.storeMessage(event);
 
                     if(typeof message === "function") {
-                        message(event, function(newMessage) {
+                         speach[arr[1]](event, function(newMessage) {
 
                             return that.sendMessage(event.sender.id, newMessage );
                         });

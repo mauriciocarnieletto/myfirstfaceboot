@@ -1,5 +1,6 @@
+'use strict'
 
-function Welcome(event) {
+var Welcome = function (event) {
     
     return {
 
