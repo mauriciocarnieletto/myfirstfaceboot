@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 var facebook = require('./bot/facebook.js');
 
 var fbot = facebook({
-    access_token: (process.env.PAGE_ACCESS_TOKEN || "EAADQ9m8UU5YBAMwElBH1ceGm6vkYG2OyKr42NT4J2aGz8WKcB4RFomJguX9pt9Vrgt9bTxVTAWuwweXzZC89Thvw33ZAOm4tbxSaVoPFrpMkXXr2n9UROr0BDsHoaCK99zPucwwQqKBtd7u4WJMufkHFBCpDTPv6kFEZBJdFgZDZD")
+    access_token: (process.env.PAGE_ACCESS_TOKEN || "EAAXV92B9rPEBADaZCtqAlG97hOVY2PueFymnfHfQomOcF814f1pycKDPHeYZBaiv5LpaxR5gdCNIPfGRN8iKjC4EmANfL4Be9AHKn5RQZA5fObRWfZBEOZCexaLa9byPSzqb2veMtSZBCYYAAFW0Msn4jQx07p7Df28yCVv9Q3ZAQZDZD")
 });
 
 
