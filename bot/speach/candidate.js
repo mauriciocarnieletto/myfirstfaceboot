@@ -1,3 +1,5 @@
+'use strict'
+
 var candidateApi = require('../../api/candidate.js')();
 var Session       = require('../../helpers/session.js')();
 /**

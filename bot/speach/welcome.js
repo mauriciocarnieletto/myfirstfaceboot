@@ -6,6 +6,8 @@ var Welcome = function (event) {
 
          welcomeMenu: function(event, callback) {
 
+            console.log(event, callback);
+
             return callback({
                 "attachment": {
                     "type": "template",

@@ -1,3 +1,5 @@
+'use strict'
+
 // Request
 const request     = require('request');
 const util        = require('util');
@@ -14,7 +16,8 @@ function Facebook(fbConfig) {
          * chat   
          * Listen and respond
          */
-        chat: function (events, req, res) {
+        chat: function (events, cb) {
+
 
             var that = this;
  
@@ -23,11 +26,27 @@ function Facebook(fbConfig) {
                 var message = {},
                     event = events[i];
 
-                if (event.message && event.message.text || event.postback) {
 
-                    var nextPostBack = Session.get(event.sender.id, 'nextPostBack');
+                if ((event.message && event.message.text && !event.message.is_echo) || (event.postback && event.postback.payload)) {
 
-                    if (!nextPostBack && !event.postback) {
+                    if(typeof Session.get(event.sender.id) === "undefined") {
+
+                        that.getProfile(event.sender.id, event, {
+
+                            onSucces: function (response) {
+
+                                Session.set(event.sender.id, { facebookData: response });
+                            }
+                        });
+                    }
+
+                    var sessionData = Session.get(event.sender.id);
+
+                    console.log(sessionData);
+
+                    var nextPostBack = (typeof sessionData !== "undefined") ? sessionData.nextPostBack : false;
+
+                    if (!nextPostBack && !event.postback && !event.message.is_echo) {
 
                         message = { 'text': 'Desculpe, não entendi.' };
 
@@ -42,21 +61,18 @@ function Facebook(fbConfig) {
 
                         message = speach[arr[1]];
                     }
-
-                    console.log('------------------------speach---------------------------');
-                    console.log(speach);
-                    console.log(message());
-
-                    that.storeMessage(event);
-
                     if(typeof message === "function") {
-                         speach[arr[1]](event, function(newMessage) {
 
-                            return that.sendMessage(event.sender.id, newMessage );
+                         message.call(speach, event, function(newMessage) {
+
+                            return that.sendMessage(event.sender.id, newMessage, cb);
                         });
                     } else {
-                        return that.sendMessage(event.sender.id, message);
+                        return that.sendMessage(event.sender.id, message, cb);
                     }
+                } else {
+
+                    cb.onSuccess();
                 }
             }
         },
@@ -65,10 +81,10 @@ function Facebook(fbConfig) {
          * getProfile   
          * Get previouse message from user
          */
-        getProfile: function (recipientId, event) {
+        getProfile: function (recipientId, event, cb) {
 
-            return request({
-                url: 'https://graph.facebook.com/v2.6/${recipientId}',
+            request({
+                url: 'https://graph.facebook.com/v2.6/' + recipientId,
                 qs: { 
                     access_token: fbConfig.access_token, 
                     fields: 'first_name,last_name,profile_pic,locale,timezone,gender' 
@@ -81,7 +97,7 @@ function Facebook(fbConfig) {
                 } else if (response.body.error) {
                     console.log('Error: ', response.body.error)
                 } else {
-                    Session.put(recipientId, { facebookData: body });
+                    cb.onSucces(body);
                 }
             });
         },
@@ -110,7 +126,7 @@ function Facebook(fbConfig) {
          * sendMessage , res  
          * Get previouse message from user
          */
-        sendMessage: function (recipientId, message) {
+        sendMessage: function (recipientId, message, cb) {
 
             request({
                 url: 'https://graph.facebook.com/v2.6/me/messages',
@@ -122,11 +138,11 @@ function Facebook(fbConfig) {
                 }
             }, function(error, response, body) {
                 if (error) {
-                    console.log("=====================Error=====================");
-                    console.log('Error sending message: ', error);
+                    cb.onError(error);
                 } else if (response.body.error) {
-                    console.log("=====================body error=====================");
-                    console.log('Error: ', response.body.error);
+                    cb.onError(response.body.error);
+                } else {
+                    cb.onSuccess(response);
                 }
             });
         }

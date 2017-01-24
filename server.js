@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 var facebook = require('./bot/facebook.js');
 
 var fbot = facebook({
-    access_token: (process.env.PAGE_ACCESS_TOKEN || "EAADQ9m8UU5YBAJuOGpPdSsOQnEKCtBYaT4JFSJF75Br5D6GpsVseiZBO9nj9rqM1S8fAZCArZCK4ANKHpIXTFZCXNrwHOC6s1fcDwAKuosg5POz64KJIW0XinFv3ftomJQAPin5GmdUUPY3ERfhS1OYt6EkYlpaGpDPWuGOPIgZDZD")
+    access_token: (process.env.PAGE_ACCESS_TOKEN || "EAADQ9m8UU5YBAMwElBH1ceGm6vkYG2OyKr42NT4J2aGz8WKcB4RFomJguX9pt9Vrgt9bTxVTAWuwweXzZC89Thvw33ZAOm4tbxSaVoPFrpMkXXr2n9UROr0BDsHoaCK99zPucwwQqKBtd7u4WJMufkHFBCpDTPv6kFEZBJdFgZDZD")
 });
 
 
@@ -43,11 +43,16 @@ app.get('/webhook', function (req, res) {
  */
 app.post('/webhook', function (req, res) {
 
-    if (!req.body.entry) return res.sendStatus(403);
+    fbot.chat(req.body.entry[0].messaging, {
+        onSuccess: function (response) {
 
-    fbot.chat(req.body.entry[0].messaging, req, res, function () {
+            res.sendStatus(200);
 
-        res.sendStatus(200);
+        }, onError: function (error) {
+
+            console.log(error);
+            res.sendStatus(500);
+        }
     });
 
 });

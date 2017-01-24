@@ -17,20 +17,18 @@ function Session() {
  			
  			var session = myCache.get(sessionId);
 
- 			return 
- 					(typeof property === "undefined" ) 
-						? session 
-						: (typeof session[property] !== "undefined")
-							? session[property] 
-							: false;
+ 			if (typeof property === "undefined" ) 
+				return session;
+			else 
+                return session[property];
     	},
     	/*
     	 * Set a new Session, if it already exists, update it
     	 */
     	set: function (sessionId, obj) {
 
-    		if(this.get(sessionId)) 
-    			return this.put(sessionId, obj);
+            if(this.get(sessionId)) 
+                return this.put(sessionId, obj);
 
 			return myCache.set(sessionId, obj);
     	},
@@ -40,8 +38,9 @@ function Session() {
     	put: function (sessionId, objs) { 
 
     		var oldSession = this.get(sessionId);
+            var newSession = Object.assign({}, oldSession, objs);
 
-    		return myCache.set(Object.assign({}, oldSession, objs));
+    		return myCache.set(sessionId, newSession);
     	}
     };
 };
