@@ -9,7 +9,7 @@ var querystring = require('querystring');
  */
 function Candidate() {
 
-    var baseApiRout = 'https://lyceumexapi.herokuapp.com/api/candidate/';
+    var baseApiRout = 'https://lyceumexapi.herokuapp.com/api/candidate';
 
     return {
 
@@ -26,8 +26,7 @@ function Candidate() {
                 if(error && onError) {
                     onError(error);
                 } else {
-
-                    onSuccess(body);
+                    onSuccess(JSON.parse(body));
                 }
             });
         },
@@ -46,11 +45,9 @@ function Candidate() {
             }, function(error, response, body) {
 
                 if(error && onError) {
-
                     onError(error);
                 } else {
-
-                    onSuccess(body);
+                    onSuccess(JSON.parse(body));
                 }
             });
         },
@@ -62,12 +59,10 @@ function Candidate() {
                 'url': baseApiRout + '/' + id,
                 'json': data
             }, function(error, response, body) {
-                
+                console.log(body);
                 if(error && onError) {
-
                     onError(error);
                 } else {
-
                     onSuccess(body);
                 }
             });

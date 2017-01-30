@@ -4,6 +4,7 @@
 const request     = require('request');
 const util        = require('util');
 
+// Session
 var Session       = require('../helpers/session.js')();
 
 /**
@@ -40,43 +41,42 @@ function Facebook(fbConfig) {
                         });
                     }
 
-                    var sessionData = Session.get(event.sender.id);
+                    Session.get(event.sender.id, function(sessionData) {
 
-                    console.log(sessionData);
+                        var nextPostback = (typeof sessionData !== "undefined") ? sessionData.nextPostback : false;
 
-                    var nextPostBack = (typeof sessionData !== "undefined") ? sessionData.nextPostBack : false;
+                        if (!nextPostback && !event.postback && !event.message.is_echo) {
 
-                    if (!nextPostBack && !event.postback && !event.message.is_echo) {
+                            message = { 'text': 'Desculpe, não entendi.' };
 
-                        message = { 'text': 'Desculpe, não entendi.' };
+                        } else if (
+                            (nextPostback && event.message && event.message.text)
+                            || (event.postback)
+                        ) {
+                            var payload = (event.postback) ? event.postback.payload : nextPostback.payload;
+                            
+                            var arr = payload.split('->');
+                            var speach = require('../bot/speach/'+arr[0]+'.js')();
 
-                    } else if (
-                        (nextPostBack && event.message && event.message.text)
-                        || (event.postback)
-                    ) {
-                        var payload = (event.postback) ? event.postback.payload : nextPostBack.payload;
-                        
-                        var arr = payload.split('->');
-                        var speach = require('../bot/speach/'+arr[0]+'.js')();
+                            message = speach[arr[1]];
+                        }
+                        if(typeof message === "function") {
 
-                        message = speach[arr[1]];
-                    }
-                    if(typeof message === "function") {
+                             message.call(speach, event, function(newMessage) {
 
-                         message.call(speach, event, function(newMessage) {
-
-                            return that.sendMessage(event.sender.id, newMessage, cb);
-                        });
-                    } else {
-                        return that.sendMessage(event.sender.id, message, cb);
-                    }
+                                return that.sendMessage(event.sender.id, newMessage, cb);
+                            });
+                        } else {
+                            that.sendMessage(event.sender.id, message, cb);
+                            cb.onSuccess();
+                        }
+                });
                 } else {
 
                     cb.onSuccess();
                 }
             }
         },
-
         /*
          * getProfile   
          * Get previouse message from user
@@ -101,7 +101,6 @@ function Facebook(fbConfig) {
                 }
             });
         },
-
         /*
          *  storeMessage
          *  Stores the current message in memory
@@ -110,7 +109,6 @@ function Facebook(fbConfig) {
 
             return Session.set(event.sender.id, { previousEvent: event });
         },
-
         /*
          * getPreviousEvent
          * Get previouse message from user
@@ -121,7 +119,6 @@ function Facebook(fbConfig) {
 
             return (previousEvent || {});
         },
-
         /*
          * sendMessage , res  
          * Get previouse message from user

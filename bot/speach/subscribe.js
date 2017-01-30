@@ -11,7 +11,7 @@ function Candidate (event) {
 
     return {
 
-        welcomeMenu: function(event, callback) {
+        newSubscription: function(event, callback) {
 
             return callback({
                 "attachment": {
@@ -19,20 +19,16 @@ function Candidate (event) {
                     "payload": {
                         "template_type": "generic",
                         "elements": [{
-                            "title": "Bem vindo Candidato!",
-                            "subtitle": "Selecione uma opção para continuar",
+                            "title": "Quero ser um Aluno Opet :)",
+                            "subtitle": "Selecione modalidade que deseja cursar",
                             "buttons": [{
                                 "type": "postback",
-                                "title": "Informações Financeiras",
-                                "payload": "candidate->paymentInformationMenu"
+                                "title": "Ensino Superior",
+                                "payload": "newSubscription->subscribeFaculty"
                             },{
                                 "type": "postback",
-                                "title": "Informações do Concurso",
-                                "payload": "candidate->contestInformationMenu"
-                            },{
-                                "type": "postback",
-                                "title": "Outros",
-                                "payload": "candidate->otherInformation"
+                                "title": "Pós-Graduação",
+                                "payload": "newSubscription->subscribePostDegree"
                             }]
                         }]
                     }
@@ -41,6 +37,15 @@ function Candidate (event) {
 
         },
 
+        subscribeFaculty: function (event, callback) {
+
+            return callback({});
+        },
+
+        subscribePostDegree: function (event, callback) {
+            
+            return callback({});
+        },
 
         auth: function (event, callback) {
 
@@ -73,7 +78,7 @@ function Candidate (event) {
 
         askCPF: function (event, callback) {
 
-            Session.put(event.sender.id, { 'nextPostback': { 'payload': "candidate->checkCPF" }});
+            Session.put(event.sender.id, { 'nextPostback': { 'payload': "newSubscription->checkCPF" }});
 
             return callback({ 'text': 'Digite seu CPF' });            
         },
@@ -95,7 +100,7 @@ function Candidate (event) {
                 }
 
                 Session.put(event.sender.id, { 'apiData': {cpf: event.message.text} });
-                Session.put(event.sender.id, { 'nextPayload': "candidate->askCandidateID" });
+                Session.put(event.sender.id, { 'nextPayload': "newSubscription->askCandidateID" });
 
                 return that.askCandidateID(event, callback);
             });
@@ -103,7 +108,7 @@ function Candidate (event) {
 
         askCandidateID: function (event, callback) {
 
-            Session.put(event.sender.id, { 'nextPostback': { 'payload': "candidate->checkCandidateID" }});
+            Session.put(event.sender.id, { 'nextPostback': { 'payload': "newSubscription->checkCandidateID" }});
 
             return callback({ 'text': 'Digite o seu código de candidato.' });           
         },
@@ -189,11 +194,11 @@ function Candidate (event) {
                             },{
                                 "type": "postback",
                                 "title": "Nota Fiscal",
-                                "payload": "candidate->nf"
+                                "payload": "newSubscription->nf"
                             },{
                                 "type": "postback",
                                 "title": "Outros",
-                                "payload": "candidate->otherInformation"
+                                "payload": "newSubscription->otherInformation"
                             }]
                         }]
                     }
@@ -228,15 +233,15 @@ function Candidate (event) {
                             "buttons": [{
                                 "type": "postback",
                                 "title": "Local da Prova",
-                                "payload": "candidate->contestLocation"
+                                "payload": "newSubscription->contestLocation"
                             },{
                                 "type": "postback",
                                 "title": "Como posso me preparar?",
-                                "payload": "candidate->howCanIPrepareMyself"
+                                "payload": "newSubscription->howCanIPrepareMyself"
                             },{
                                 "type": "postback",
                                 "title": "Outros",
-                                "payload": "candidate->otherInformation"
+                                "payload": "newSubscription->otherInformation"
                             }]
                         }]
                     }

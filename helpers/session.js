@@ -13,22 +13,33 @@ function Session() {
     	/*
     	 * Get current Session
     	 */
-    	get: function (sessionId, property) {
+    	get: function (sessionId, property, cb) {
  			
+
+            var filterProp = (typeof property === "string") ? property : false;
+
+            cb = (typeof property === "function") ? property : cb;
+
  			var session = myCache.get(sessionId);
 
- 			if (typeof property === "undefined" ) 
-				return session;
-			else 
-                return session[property];
+            session = (!filterProp) ? session : session[filterProp];
+
+            if(typeof cb !== "undefined") {
+
+                return cb(session);
+            }
+
+            return session;
     	},
     	/*
     	 * Set a new Session, if it already exists, update it
     	 */
     	set: function (sessionId, obj) {
 
-            if(this.get(sessionId)) 
+            if(this.get(sessionId)) {
+
                 return this.put(sessionId, obj);
+            }
 
 			return myCache.set(sessionId, obj);
     	},

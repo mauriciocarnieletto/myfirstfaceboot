@@ -25,7 +25,7 @@ var Welcome = function (event) {
                                 },{
                                     "type": "postback",
                                     "title": "Quero ser Aluno Opet",
-                                    "payload": "candidate->subscribe"
+                                    "payload": "subscribe->newSubscription"
                                 }]
                             },{
                                 "title": "Aluno(a)",
