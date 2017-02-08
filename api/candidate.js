@@ -22,11 +22,11 @@ function Candidate() {
                 'url': baseApiRout + '?' + querystring.stringify(data),
                 'content-type': 'application/json',
             }, function(error, response, body) {
-
+                console.log(body);
                 if(error && onError) {
                     onError(error);
                 } else {
-                    onSuccess(JSON.parse(body));
+                    onSuccess(body);
                 }
             });
         },

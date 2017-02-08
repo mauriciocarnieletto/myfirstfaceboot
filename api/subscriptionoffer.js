@@ -26,7 +26,7 @@ function SubscriptionOffer() {
                 if(error && onError) {
                     onError(error);
                 } else {
-                    onSuccess(JSON.parse(body));
+                    onSuccess(body);
                 }
             });
         }

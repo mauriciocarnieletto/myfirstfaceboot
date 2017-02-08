@@ -9,7 +9,7 @@ var querystring = require('querystring');
  */
 function Student() {
 
-    var baseApiRout = 'https://23b02604.ngrok.io/api/student';//'https://lyceumexapi.herokuapp.com/api/student';
+    var baseApiRout = 'https://23b02604.ngrok.io/api/students';//'https://lyceumexapi.herokuapp.com/api/student';
 
     return {
 
@@ -26,7 +26,7 @@ function Student() {
                 if(error && onError) {
                     onError(error);
                 } else {
-                    onSuccess(JSON.parse(body));
+                    onSuccess(body);
                 }
             });
         },

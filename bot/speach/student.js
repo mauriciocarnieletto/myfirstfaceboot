@@ -84,6 +84,7 @@ function Student (event) {
 
             StudentApi.get({ cpf: event.message.text }, function(response) {
 
+                response = JSON.parse(response);
                 if(!response[0]) {
 
                     text = "Não encontrei nenhum aluno com este CPF, por favor, digite novamente :)";
@@ -116,8 +117,9 @@ function Student (event) {
             
             Session.get(event.sender.id, 'apiData', function (apiData) {
                 
-                StudentApi.get({ 'cpf': apiData.cpf, 'StudentId': event.message.text }, function(response) {
+                StudentApi.get({ 'cpf': apiData.cpf, 'ra': event.message.text }, function(response) {
 
+                    response = JSON.parse(response);
                     if(!response[0]) {
                         
                         return callback({ 'text': "Não encontrei nenhum aluno com este código, por favor, digite novamente. Caso tenha esquecido, digite \"Esqueci\"" });
@@ -142,6 +144,8 @@ function Student (event) {
 
                 StudentApi.get({ 'cpf': apiData.cpf, 'birthdate': event.message.text }, function(response) {
 
+                    response = JSON.parse(response);
+
                     if(!response[0]) {
 
                         return callback({ 'text': "Não encontrei nenhum aluno com este cpf que nasceu nesta data :(" });
@@ -158,15 +162,19 @@ function Student (event) {
 
             var that = this;
 
-            StudentData.facebookId = event.sender.id;
+            Session.get(event.sender.id, function(data) {
 
-            Session.put(event.sender.id, { 'authAsStudent': true });
-            
-            return StudentApi.put(StudentData._id, StudentData, function (response) { 
+                StudentData.facebookId = event.sender.id;
+                StudentData.profileImage = data.facebookData.profile_pic
 
-                Session.put(event.sender.id, { 'StudentData': StudentData });
+                Session.put(event.sender.id, { 'authAsStudent': true });
+                
+                return StudentApi.put(StudentData._id, StudentData, function (response) { 
 
-                return that.welcomeMenu(event, callback);
+                    Session.put(event.sender.id, { 'StudentData': StudentData });
+
+                    return that.welcomeMenu(event, callback);
+                });
             });
         },
 

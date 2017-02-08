@@ -88,7 +88,7 @@ function Subscription (event) {
             var that = this;
 
             subscriptionOfferApi.getByName(event.message.text, function(response) {
-
+                response = JSON.parse(response);
                 if(!response[0]) {
 
                     text = "Não encontrei este curso :( Digite novamente! (Dica: utilize palavras chave, como \"Administração\", \"Direito\")";
@@ -196,7 +196,7 @@ function Subscription (event) {
             }
 
             candidateApi.get({ 'cpf': event.message.text }, function(response) {
-
+                response = JSON.parse(response);
                 if(!response[0]) {
     
                     Session.put(event.sender.id, { 'SubscriptionForm': { 'cpf': event.message.text } });

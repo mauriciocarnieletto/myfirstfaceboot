@@ -86,7 +86,7 @@ function Candidate (event) {
                 params = {};
 
             candidateApi.get({ cpf: event.message.text }, function(response) {
-
+                    response = JSON.parse(response);
                 if(!response[0]) {
 
                     text = "Não encontrei nenhum candidato com este CPF, por favor, digite novamente :)";
@@ -120,7 +120,7 @@ function Candidate (event) {
             Session.get(event.sender.id, 'apiData', function (apiData) {
                 
                 candidateApi.get({ 'cpf': apiData.cpf, 'candidateId': event.message.text }, function(response) {
-
+                    response = JSON.parse(response);
                     if(!response[0]) {
                         
                         return callback({ 'text': "Não encontrei nenhum candidato com este código, por favor, digite novamente. Caso tenha esquecido, digite \"Esqueci\"" });
@@ -144,7 +144,7 @@ function Candidate (event) {
             Session.get(event.sender.id, 'apiData', function (apiData) {
 
                 candidateApi.get({ 'cpf': apiData.cpf, 'birthdate': event.message.text }, function(response) {
-
+                    response = JSON.parse(response);
                     if(!response[0]) {
 
                         return callback({ 'text': "Não encontrei nenhum candidato com este cpf que nasceu nesta data :(" });
