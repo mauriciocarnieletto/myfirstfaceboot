@@ -48,11 +48,25 @@ function Session() {
     	 */
     	put: function (sessionId, objs) { 
 
-    		var oldSession = this.get(sessionId);
-            var newSession = Object.assign({}, oldSession, objs);
+    		var currentSession = this.get(sessionId);
+            var newSession = Object.assign({}, currentSession, objs);
 
-    		return myCache.set(sessionId, newSession);
-    	}
+            for (var prop in objs)
+                if (prop in currentSession)
+                    currentSession[prop] = Object.assign({}, currentSession[prop], objs[prop]);
+                else
+                    currentSession[prop] = objs[prop];
+
+    		return myCache.set(sessionId, currentSession);
+    	},
+
+        del: function (sessionId, prop, cb) {
+
+            return myCache.del(sessionId, prop, function () {
+
+                if(typeof cb === "function") cb();
+            });
+        }
     };
 };
 

@@ -2,6 +2,13 @@
 var express     = require('express');
 var bodyParser  = require('body-parser');
 var request     = require('request');
+var mongoose = require('mongoose');
+
+// MongoDB
+var conStr = 'mongodb://lyceumexapi:lyceum@ds117899.mlab.com:17899/heroku_pqj5zvzm';
+//mongodb://<dbuser>:<dbpassword>@ds117899.mlab.com:17899/
+mongoose.connect(conStr);
+console.log('Mongo is connected at', conStr);
 
 // Express
 var app = express();
@@ -27,7 +34,7 @@ app.get('/', function (req, res) {
  */
 app.get('/webhook', function (req, res) {
 
-    if (req.query['hub.verify_token'] === 'jubileia') {
+    if (req.query['hub.verify_token'] === '12344321qwerrewqasdffdsazxcvvcxz') {
 
         res.send(req.query['hub.challenge']);
     } else {
@@ -56,6 +63,32 @@ app.post('/webhook', function (req, res) {
     });
 
 });
+
+var messages = require('./models/message.js');
+
+setInterval(function () {
+
+    messages.find({
+
+        sendDate: null
+
+    }, function (err, docs) {
+
+        docs.forEach(function (doc) {
+
+            fbot.sendMessage(doc.facebookId, doc.message, {
+
+                onSuccess: function(response) {
+                    doc.sendDate = new Date();
+                    doc.save();
+                }
+            });
+        });
+
+    });
+
+}, 10000);
+
 
 // Service start
 app.listen((process.env.PORT || 3000));

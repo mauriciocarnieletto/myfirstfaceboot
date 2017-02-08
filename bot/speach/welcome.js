@@ -15,33 +15,24 @@ var Welcome = function (event) {
                         "template_type": "generic",
                         "elements": [
                             {
-                                "title": "Vestibular Opet",
-                                "subtitle": "Informações sobre vestibular.",
-                                "image_url": "https://image.shutterstock.com/display_pic_with_logo/2552089/236656255/stock-photo-optical-form-of-an-examination-236656255.jpg",
+                                "title": "Bem vindo à Opet!",
+                                "subtitle": "Selecione uma opção abaixo ;)",
+                                "image_url": "http://www.opet.com.br/faculdade/wp-content/uploads/2013/09/Fachada-campus-1-abril06.jpg",
                                 "buttons": [{
+                                    "type": "postback",
+                                    "title": "Sou aluno Opet",
+                                    "payload": "student->auth"
+                                },{
                                     "type": "postback",
                                     "title": "Sou Candidato",
                                     "payload": "candidate->auth"
                                 },{
                                     "type": "postback",
                                     "title": "Quero ser Aluno Opet",
-                                    "payload": "subscribe->newSubscription"
+                                    "payload": "subscribe->new"
                                 }]
-                            },{
-                                "title": "Aluno(a)",
-                                "subtitle": "Sou um aluno(a)",
-                                "image_url": "http://www.4freephotos.com/medium/batch/Math-notebook-on-student-table346.jpg",
-                                "buttons": [{
-                                    "type": "postback",
-                                    "title": "Ensino Superior",
-                                    "payload": "student->universityWelcome"
-                                },{
-                                    "type": "postback",
-                                    "title": "Colégio",
-                                    "payload": "student->schoolWelcome"
-                                }
-                            ]
-                        }]
+                            }
+                        ]
                     }
                 }
             });

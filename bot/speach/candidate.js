@@ -167,6 +167,8 @@ function Candidate (event) {
             
             return candidateApi.put(candidateData._id, candidateData, function (response) { 
 
+                Session.put(event.sender.id, { 'candidateData': candidateData });
+
                 return that.welcomeMenu(event, callback);
             });
         },

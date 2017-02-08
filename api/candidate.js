@@ -9,7 +9,7 @@ var querystring = require('querystring');
  */
 function Candidate() {
 
-    var baseApiRout = 'https://lyceumexapi.herokuapp.com/api/candidate';
+    var baseApiRout = 'https://23b02604.ngrok.io/api/candidate';//'https://lyceumexapi.herokuapp.com/api/candidate';
 
     return {
 
@@ -36,18 +36,12 @@ function Candidate() {
             request({
                 'method': 'post',
                 'url': baseApiRout,
-                'multipart': [
-                    {
-                        'content-type': 'application/json',
-                        'body': JSON.stringify(data)
-                    }
-                ]
+                'json': data
             }, function(error, response, body) {
-
                 if(error && onError) {
                     onError(error);
                 } else {
-                    onSuccess(JSON.parse(body));
+                    onSuccess(body);
                 }
             });
         },
@@ -66,6 +60,13 @@ function Candidate() {
                     onSuccess(body);
                 }
             });
+        },
+
+        getNewId: function (cb) {
+
+            var newId = (new Date().getFullYear()).toString() + (Math.floor(Math.random() * (99999 - 10000)) + 1000).toString();
+
+            return cb(newId);
         }
 
     };
