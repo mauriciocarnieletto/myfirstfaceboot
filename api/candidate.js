@@ -9,7 +9,7 @@ var querystring = require('querystring');
  */
 function Candidate() {
 
-    var baseApiRout = 'https://23b02604.ngrok.io/api/candidate';//'https://lyceumexapi.herokuapp.com/api/candidate';
+    var baseApiRout = 'https://lyceumexapi.herokuapp.com/api/candidate';
 
     return {
 
